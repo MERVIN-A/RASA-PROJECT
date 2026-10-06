@@ -1,0 +1,10 @@
+# Custom action server (actions.py). Only reachable on the internal Docker network.
+FROM rasa/rasa-sdk:3.6.2
+WORKDIR /app
+COPY actions /app/actions
+COPY requirements-actions.txt /app/
+USER root
+RUN pip install --no-cache-dir -r requirements-actions.txt
+USER 1001
+EXPOSE 5055
+CMD ["start", "--actions", "actions"]

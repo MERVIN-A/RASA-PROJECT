@@ -1,0 +1,8 @@
+{
+  "_comment": "Curated offset programmes (demo). Price per tonne CO2e is indicative.",
+  "programmes": [
+    {"name": "Gold Standard cookstoves (Kenya)", "standard": "Gold Standard", "price_per_tonne_eur": 18, "type": "avoidance", "note": "Health co-benefits; avoidance, not removal."},
+    {"name": "Peatland restoration (Germany)", "standard": "MoorFutures", "price_per_tonne_eur": 64, "type": "removal/avoidance", "note": "Local, long-term monitoring."},
+    {"name": "Biochar carbon removal", "standard": "Puro.earth", "price_per_tonne_eur": 130, "type": "removal", "note": "Durable removal, higher price."}
+  ]
+}

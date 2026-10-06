@@ -1,0 +1,12 @@
+.env
+.pytest_cache/
+models/
+/results/
+tensorboard/
+handover_queue/*.json
+__pycache__/
+*.pyc
+.rasa/
+.venv/
+train_test_split/
+*.log

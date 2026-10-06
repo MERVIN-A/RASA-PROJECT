@@ -1,0 +1,5 @@
+# Action server endpoint for local development.
+# Docker Compose uses endpoints.docker.yml (service name "actions" on the internal network).
+action_endpoint:
+  url: "http://localhost:5055/webhook"
+# Default in-memory tracker store: no persistent personal data (GDPR data minimisation)

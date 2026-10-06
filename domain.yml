@@ -1,0 +1,207 @@
+# =============================================================================
+# Domain: intents, entities, slots, forms, responses and custom actions
+# =============================================================================
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - thank
+  - affirm
+  - deny
+  - plan_trip
+  - inform
+  - compare_transport
+  - ask_carbon
+  - find_hotels
+  - ask_offset
+  - request_human
+  - share_location
+  - ask_privacy
+  - delete_data
+  - explain_metric
+  - bot_challenge
+  - out_of_scope
+
+entities:
+  - destination
+  - origin
+  - travel_date
+  - budget
+  - travellers
+  - sustainability_level
+  - transport_mode
+
+slots:
+  # ---- trip slots persisted across turns -----------------------------------
+  destination:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: destination
+  origin:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: origin
+  travel_date:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: travel_date
+  budget:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: budget
+  travellers:
+    type: float
+    initial_value: 1
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: travellers
+  sustainability_level:
+    type: categorical
+    values: [low, medium, high]
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: sustainability_level
+  # ---- control / result slots (set by custom actions) ----------------------
+  fallback_count:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+      - type: custom
+  handover_active:
+    type: bool
+    initial_value: false
+    influence_conversation: true
+    mappings:
+      - type: custom
+  transport_results:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
+  hotel_results:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
+  location_consent:
+    type: bool
+    initial_value: false
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+forms:
+  trip_form:
+    required_slots:
+      - origin
+      - destination
+      - travel_date
+      - budget
+      - sustainability_level
+
+responses:
+  utter_greet:
+    - text: "Hi! I'm your Eco-Travel Advisor 🌱 I help you plan trips with a lower carbon footprint. I only use what you tell me for this conversation and store nothing afterwards. Where would you like to go?"
+      buttons:
+        - title: "Plan a trip"
+          payload: "/plan_trip"
+        - title: "Compare transport"
+          payload: "/compare_transport"
+        - title: "Talk to a person"
+          payload: "/request_human"
+  utter_ask_origin:
+    - text: "Where will you be travelling from? You can type a city or share your location."
+      buttons:
+        - title: "📍 Use my location"
+          payload: "/share_location"
+  utter_ask_destination:
+    - text: "Where would you like to go?"
+      buttons:
+        - title: "Paris"
+          payload: '/inform{"destination":"Paris"}'
+        - title: "Amsterdam"
+          payload: '/inform{"destination":"Amsterdam"}'
+        - title: "Berlin"
+          payload: '/inform{"destination":"Berlin"}'
+        - title: "Lisbon"
+          payload: '/inform{"destination":"Lisbon"}'
+  utter_ask_travel_date:
+    - text: "When do you plan to travel?"
+  utter_ask_budget:
+    - text: "What's your total budget per person in euros?"
+      buttons:
+        - title: "Under €150"
+          payload: '/inform{"budget":"150"}'
+        - title: "€150–400"
+          payload: '/inform{"budget":"400"}'
+        - title: "€400+"
+          payload: '/inform{"budget":"1000"}'
+  utter_ask_sustainability_level:
+    - text: "How important is a low carbon footprint to you? (Tip: 'High' ranks low-emission options first even if they cost a little more.)"
+      buttons:
+        - title: "🌿 High"
+          payload: '/inform{"sustainability_level":"high"}'
+        - title: "⚖️ Medium"
+          payload: '/inform{"sustainability_level":"medium"}'
+        - title: "💶 Low"
+          payload: '/inform{"sustainability_level":"low"}'
+  utter_trip_summary:
+    - text: "Great — {origin} → {destination} on {travel_date}, budget €{budget}, sustainability priority: {sustainability_level}. Let me check options and emissions…"
+  utter_ask_handover_consent:
+    - text: "I can pass this conversation to a human travel advisor. To do that I'll share your trip details and this chat with them. Is that OK?"
+      buttons:
+        - title: "Yes, connect me"
+          payload: "/affirm"
+        - title: "No thanks"
+          payload: "/deny"
+  utter_handover_declined:
+    - text: "No problem — I'll keep helping here. What would you like to do next?"
+  utter_privacy:
+    - text: "I process your trip details only to give recommendations during this chat. Nothing is stored after the session, location is used only with your consent and rounded to city level, and a human advisor only sees your chat if you agree. Type 'delete my data' at any time."
+  utter_explain_metric:
+    - text: "Emissions are shown as kg CO₂e per person for the whole journey. 🟢 Green = under 0.06 kg per km (e.g. rail, coach), 🟠 Amber = 0.06–0.15 kg per km, 🔴 Red = over 0.15 kg per km (e.g. short flights, solo car). Figures are estimates based on Climatiq emission factors."
+  utter_out_of_scope:
+    - text: "Sorry, I can only help with planning sustainable trips. You can ask me to plan a trip, compare transport or find eco-certified hotels."
+  utter_iamabot:
+    - text: "I'm a virtual assistant built with Rasa. A human advisor is available any time — just ask."
+  utter_goodbye:
+    - text: "Safe and green travels! 🌍"
+  utter_youarewelcome:
+    - text: "You're welcome! Anything else for your trip?"
+  utter_anything_else:
+    - text: "Would you like to see eco-certified hotels, carbon offset options, or talk to an advisor?"
+      buttons:
+        - title: "🏨 Eco hotels"
+          payload: "/find_hotels"
+        - title: "🌳 Offsets"
+          payload: "/ask_offset"
+        - title: "👤 Advisor"
+          payload: "/request_human"
+
+actions:
+  - validate_trip_form
+  - action_search_travel
+  - action_calculate_carbon
+  - action_rank_options
+  - action_show_hotels
+  - action_show_offsets
+  - action_detect_location
+  - action_handover
+  - action_delete_data
+  - action_default_fallback
+
+session_config:
+  session_expiration_time: 30
+  carry_over_slots_to_new_session: false

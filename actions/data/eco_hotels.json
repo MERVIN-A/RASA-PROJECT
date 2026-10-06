@@ -1,0 +1,22 @@
+{
+  "_comment": "Curated mock database (no reliable free API for eco-certification). Demo data - verify certifications before production use.",
+  "paris": [
+    {"name": "Hôtel Les Jardins Verts", "certification": "Green Key", "price_per_night": 135, "rating": 4.4, "accessible": true, "co2_per_night_kg": 6.1},
+    {"name": "Eco Loft Montmartre", "certification": "EU Ecolabel", "price_per_night": 98, "rating": 4.1, "accessible": false, "co2_per_night_kg": 7.4},
+    {"name": "Canal Saint-Martin Lodge", "certification": "Clef Verte", "price_per_night": 162, "rating": 4.6, "accessible": true, "co2_per_night_kg": 5.2}
+  ],
+  "amsterdam": [
+    {"name": "Groen Canal House", "certification": "Green Key", "price_per_night": 145, "rating": 4.5, "accessible": true, "co2_per_night_kg": 4.8},
+    {"name": "Noord Eco Hostel", "certification": "EarthCheck", "price_per_night": 55, "rating": 4.0, "accessible": true, "co2_per_night_kg": 3.9}
+  ],
+  "berlin": [
+    {"name": "Spree Solar Hotel", "certification": "GreenSign Level 4", "price_per_night": 110, "rating": 4.3, "accessible": true, "co2_per_night_kg": 5.6},
+    {"name": "Kreuzberg Bio Pension", "certification": "EU Ecolabel", "price_per_night": 72, "rating": 4.2, "accessible": false, "co2_per_night_kg": 6.3}
+  ],
+  "lisbon": [
+    {"name": "Alfama Green Stay", "certification": "Biosphere", "price_per_night": 90, "rating": 4.5, "accessible": true, "co2_per_night_kg": 5.0}
+  ],
+  "_default": [
+    {"name": "Local Eco Guesthouse (demo)", "certification": "Green Key", "price_per_night": 95, "rating": 4.2, "accessible": true, "co2_per_night_kg": 6.0}
+  ]
+}

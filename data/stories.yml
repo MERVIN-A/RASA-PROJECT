@@ -1,0 +1,56 @@
+version: "3.1"
+# =============================================================================
+# Stories: multi-turn paths that TEDPolicy generalises from
+# =============================================================================
+stories:
+- story: Handover accepted
+  steps:
+  - intent: request_human
+  - action: utter_ask_handover_consent
+  - intent: affirm
+  - action: action_handover
+- story: Handover declined
+  steps:
+  - intent: request_human
+  - action: utter_ask_handover_consent
+  - intent: deny
+  - action: utter_handover_declined
+
+- story: City break - high sustainability, then hotels
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: plan_trip
+  - action: trip_form
+  - active_loop: trip_form
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: utter_trip_summary
+  - action: action_search_travel
+  - action: action_calculate_carbon
+  - action: action_rank_options
+  - action: utter_anything_else
+  - intent: find_hotels
+  - action: action_show_hotels
+
+- story: Business trip - offsets then advisor
+  steps:
+  - intent: plan_trip
+  - action: trip_form
+  - active_loop: trip_form
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: utter_trip_summary
+  - action: action_search_travel
+  - action: action_calculate_carbon
+  - action: action_rank_options
+  - action: utter_anything_else
+  - intent: ask_offset
+  - action: action_show_offsets
+  - intent: request_human
+  - action: utter_ask_handover_consent
+  - intent: affirm
+  - action: action_handover
+

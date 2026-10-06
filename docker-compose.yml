@@ -1,0 +1,27 @@
+# docker compose up --build    -> frontend http://localhost:3000 , Rasa http://localhost:5005
+services:
+  rasa:
+    build: { context: ., dockerfile: Dockerfile }
+    ports: ["5005:5005"]
+    env_file: .env
+    depends_on: [actions]
+    networks: [public, internal]
+    restart: unless-stopped
+  actions:
+    build: { context: ., dockerfile: Dockerfile.actions }
+    env_file: .env                 # API keys injected at runtime, never baked into images
+    expose: ["5055"]               # NOT published to the host: internal network only
+    volumes: ["./handover_queue:/app/handover_queue"]
+    networks: [internal]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:5055/health')"]
+      interval: 30s
+  frontend:
+    build: { context: ., dockerfile: Dockerfile.frontend }
+    ports: ["3000:3000"]
+    networks: [public]
+networks:
+  public:
+  internal:
+    internal: true

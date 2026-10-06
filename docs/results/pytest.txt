@@ -1,0 +1,30 @@
+============================= test session starts ==============================
+platform linux -- Python 3.10.20, pytest-9.1.1, pluggy-1.6.0 -- /home/claude/eco-travel-advisor/../rasaenv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/claude/eco-travel-advisor
+plugins: anyio-4.15.1
+collecting ... collected 21 items
+
+tests/test_actions.py::test_climatiq_success PASSED                      [  4%]
+tests/test_actions.py::test_climatiq_timeout_falls_back PASSED           [  9%]
+tests/test_actions.py::test_climatiq_bad_json_falls_back PASSED          [ 14%]
+tests/test_actions.py::test_car_emissions_shared_between_travellers PASSED [ 19%]
+tests/test_actions.py::test_amadeus_no_credentials_returns_none PASSED   [ 23%]
+tests/test_actions.py::test_amadeus_flight_success PASSED                [ 28%]
+tests/test_actions.py::test_amadeus_http_error_returns_none PASSED       [ 33%]
+tests/test_actions.py::test_search_calculate_rank_pipeline PASSED        [ 38%]
+tests/test_actions.py::test_search_unknown_city_handled PASSED           [ 42%]
+tests/test_actions.py::test_rank_with_no_options_offers_handover PASSED  [ 47%]
+tests/test_actions.py::test_handover_writes_context PASSED               [ 52%]
+tests/test_actions.py::test_handover_webhook_failure_uses_file PASSED    [ 57%]
+tests/test_actions.py::test_two_stage_fallback_then_handover PASSED      [ 61%]
+tests/test_actions.py::test_detect_location_uses_nearest_city_offline PASSED [ 66%]
+tests/test_actions.py::test_validate_budget_parses_currency PASSED       [ 71%]
+tests/test_scoring.py::test_carbon_band_thresholds PASSED                [ 76%]
+tests/test_scoring.py::test_carbon_band_zero_distance_is_safe PASSED     [ 80%]
+tests/test_scoring.py::test_high_sustainability_never_ranks_flight_first PASSED [ 85%]
+tests/test_scoring.py::test_low_sustainability_favours_cheapest PASSED   [ 90%]
+tests/test_scoring.py::test_budget_moves_expensive_options_to_over_budget PASSED [ 95%]
+tests/test_scoring.py::test_empty_input PASSED                           [100%]
+
+============================== 21 passed in 0.22s ==============================

@@ -1,0 +1,16 @@
+// NLU (DIETClassifier) and dialogue-policy architecture
+digraph P {
+  graph [rankdir=LR, fontname="Helvetica", nodesep=0.25, ranksep=0.35, pad=0.2];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, fillcolor="#eef6f0", color="#1f6e43"];
+  edge [color="#4a5a52"];
+  msg [label="User message\n\"train from London\nto Paris, budget 300\"", fillcolor="#ffffff"];
+  subgraph cluster_f { label="Tokenisation + featurisation"; fontname="Helvetica"; style="rounded,dashed"; color="#8aa597";
+    sp [label="SpacyNLP\nen_core_web_md"]; tok [label="SpacyTokenizer"];
+    f1 [label="SpacyFeaturizer\n(dense vectors)"]; f2 [label="Regex + Lexical\nSyntactic"]; f3 [label="CountVectors\nword + char 1–4"]; }
+  diet [label="DIETClassifier\ntransformer (2 layers)\njoint intent + CRF entities", fillcolor="#d9efe2"];
+  syn [label="EntitySynonymMapper\ntrain → rail"]; fbk [label="FallbackClassifier\n< 0.6 → nlu_fallback", fillcolor="#fff3df", color="#a35c00"];
+  pol [label="Policies\nRule · Memoization · TED", fillcolor="#e8eaf6", color="#283593"];
+  act [label="Next action\n(form / custom action /\nresponse)", fillcolor="#ffffff"];
+  msg -> sp -> tok; tok -> f1; tok -> f2; tok -> f3; f1 -> diet; f2 -> diet; f3 -> diet;
+  diet -> syn -> fbk -> pol -> act;
+}

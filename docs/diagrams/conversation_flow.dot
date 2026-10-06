@@ -1,0 +1,35 @@
+// Conversation flow with branching on sustainability preference and budget
+digraph G {
+  graph [rankdir=TB, fontname="Helvetica", nodesep=0.35, ranksep=0.32, bgcolor="white", pad=0.2];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, fillcolor="#eef6f0", color="#1f6e43"];
+  edge [fontname="Helvetica", fontsize=9.5, color="#4a5a52"];
+  start [label="Greeting + privacy notice\n[Plan a trip] [Compare] [Talk to a person]", fillcolor="#d9efe2"];
+  form [label="trip_form (adaptive intake)\norigin → destination → date → budget → sustainability\n(skips slots already given; validates each)", fillcolor="#ffffff"];
+  loc [label="action_detect_location\nGPS → OpenCage / nearest city", fillcolor="#fff3df", color="#a35c00"];
+  intr [label="Interruptions inside form\nprivacy · explain metric (tooltip)", fillcolor="#ffffff"];
+  search [label="action_search_travel\nAmadeus flights + estimated rail/coach/car"];
+  carbon [label="action_calculate_carbon\nClimatiq kg CO₂e → green / amber / red"];
+  rank [label="action_rank_options\nS = wc(1−C) + wp(1−P) + wu·U", fillcolor="#d9efe2"];
+  high [label="High: weights 0.6 / 0.2 / 0.2\nrail/coach first, red alert on flights", fillcolor="#e6f4ec", color="#1e7a46"];
+  med [label="Medium: 0.4 / 0.4 / 0.2", fillcolor="#fff3df", color="#a35c00"];
+  low [label="Low: 0.25 / 0.55 / 0.2\ncheapest first, greener option still shown", fillcolor="#fdeaea", color="#b3261e"];
+  budget [label="No option within budget?\nexplain trade-off, suggest dates/destination", fillcolor="#ffffff"];
+  next [label="Results cards + next step\n[Eco hotels] [Offsets] [Advisor]"];
+  hotels [label="Eco-hotel carousel"]; offs [label="Reduce first, then\nvetted offsets"];
+  fb [label="nlu_fallback (conf < 0.6)\nStage 1: did you mean? (top-2 buttons)\nStage 2: constrained menu", fillcolor="#fff3df", color="#a35c00"];
+  consent [label="Consent to share context?", shape=diamond, fillcolor="#e8eaf6", color="#283593"];
+  hand [label="action_handover\nslots + transcript + ranked options → advisor\nhandover banner shown", fillcolor="#e8eaf6", color="#283593"];
+  start -> form [label=" plan / compare / carbon"];
+  form -> loc [label=" share location", dir=both];
+  form -> intr [dir=both, style=dashed];
+  form -> search [label=" all slots valid"];
+  search -> carbon -> rank;
+  rank -> high [label=" high"]; rank -> med [label=" medium"]; rank -> low [label=" low"];
+  high -> budget [style=dashed]; med -> budget [style=dashed]; low -> budget [style=dashed];
+  high -> next; med -> next; low -> next;
+  next -> hotels; next -> offs; next -> consent [label=" advisor"];
+  start -> consent [label=" talk to a person"];
+  fb -> consent [label=" stage 3"];
+  consent -> hand [label=" yes"];
+  {rank=same; fb; form}
+}
